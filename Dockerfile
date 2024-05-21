@@ -1,5 +1,6 @@
 # Use the official Windows Server Core base image
-FROM mcr.microsoft.com/windows/servercore:ltsc2019
+# Updated to a more recent tag if ltsc2019 has issues
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
 
 # Set environment variables for powershell execution policy
 SHELL ["powershell", "-Command"]
