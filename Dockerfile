@@ -1,5 +1,5 @@
 # Use a different official Windows base image
-FROM mcr.microsoft.com/windows:20H2
+FROM mcr.microsoft.com/windows:ltsc2019
 
 # Set environment variables for powershell execution policy
 SHELL ["powershell", "-Command"]
